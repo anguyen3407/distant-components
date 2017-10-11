@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import { loginAs } from './redux-stuff/reducer'
 
-export default class Login extends Component {
+class Login extends Component {
   constructor() {
     super();
     this.state = {
@@ -15,12 +17,13 @@ export default class Login extends Component {
   }
 
   render() {
-    const { loggedInAs, isCreditCardHolder } = this.props;
-
+    const { loggedInAs, isCreditCardHolder, loginAs } = this.props;
+//loginAs from line 20 is different than loginAs from line 3
     return (
       <div className="login">
         {!loggedInAs && <div>
-          Log in as <input onChange={(e) => this.updateLoginName(e.target.value)} /> <button className="button">Go</button>
+          Log in as <input onChange={(e) => this.updateLoginName(e.target.value)} /> <button className="button"
+          onClick={(e) => loginAs(e.target.value)}>Go</button>
         </div>}
         {loggedInAs && <div>
           Welcome, {loggedInAs}! {isCreditCardHolder && "(CC holder)"}
@@ -29,3 +32,18 @@ export default class Login extends Component {
     )
   }
 };
+
+
+const mapStateToProps = (state) => {
+  return {
+    loggedInAs: state.loggedInAs,
+    isCreditCardHolder: state.isCreditCardHolder
+  }
+};
+
+const mapDispatchToProps = {
+  loginAs
+}
+
+
+export default  connect(mapStateToProps, mapDispatchToProps)(Login);
